@@ -1,0 +1,22 @@
+@startuml "sequence.puml"
+
+actor Operator
+participant MES_API as "MES API"
+
+database Cache
+database Database
+
+Database -> Cache: Refresh
+Operator -> MES_API: Fetch orders
+MES_API  -> Cache: Fetch orders
+Cache    -> MES_API: Return orders
+MES_API  -> Operator: Return orders
+Operator -> MES_API: Accept order
+MES_API  -> Cache: Invalidate order
+MES_API  -> Database: Fetch order
+Database -> MES_API: Return order
+MES_API  -> Operator: Return order
+Operator -> MES_API: Commit order
+MES_API  -> Database: Commit order and change status
+Database -> Cache: Refresh
+@enduml
